@@ -31,6 +31,7 @@
 }
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0}
+html{scrollbar-gutter:stable}
 body{
   font-family:var(--font); color:var(--ink); font-size:16px; line-height:1.7; word-break:keep-all; overflow-wrap:break-word;
   min-height:100vh; -webkit-font-smoothing:antialiased;
@@ -69,7 +70,11 @@ a{color:var(--primary)}
 .fs-btn{border-color:var(--hairline);color:var(--ink)}
 /* 전체 화면(발표) 모드: 차례를 숨기고 글자를 키웁니다 */
 body.present .toc,body.present .toc-fab,body.present .hint,body.present .blob,body.present .edit-slide{display:none!important}
-body.present .layout{grid-template-columns:1fr;max-width:1500px;padding-top:16px}
+body.present .layout{grid-template-columns:minmax(0,1fr) 150px;max-width:1640px;padding-top:16px}
+body.present .side{top:50%;transform:translateY(-50%);position:fixed;right:max(24px,calc((100vw - 1640px) / 2 + 24px));width:150px;max-height:none}
+body.present .pager{grid-template-columns:1fr;gap:12px}
+body.present .pager .next{height:150px;font-size:19px}
+body.present .pager .prev{height:72px}
 body.present .slide{min-height:calc(100vh - 170px);padding:52px 64px}
 body.present .md{font-size:22px;max-width:1100px}
 body.present .slide-h{font-size:clamp(32px,3.8vw,50px)}
@@ -84,7 +89,7 @@ body.present .fs-btn{background:#24324a;color:#fff;border-color:#24324a}
 .stage{min-width:0;display:flex;flex-direction:column;gap:14px}
 .slide{position:relative;min-height:calc(100vh - 230px);padding:44px 48px;animation:pageIn .5s var(--ux-ease)}
 .pager{display:grid;grid-template-columns:1fr 2fr;gap:12px}
-.pager button{height:60px;border-radius:20px;font-size:16px;font-weight:750;border:1px solid var(--hairline);transition:.2s}
+.pager button{height:56px;border-radius:20px;font-size:16px;font-weight:750;border:1px solid var(--hairline);transition:.2s}
 .pager .prev{background:rgba(255,255,255,.78);color:var(--ink)}
 .pager .next{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 14px 28px -14px rgba(59,99,246,.7)}
 .pager .next:hover{background:var(--primary-hover)}
@@ -92,7 +97,8 @@ body.present .fs-btn{background:#24324a;color:#fff;border-color:#24324a}
 .hint{margin:0;text-align:center;font-size:13px;color:var(--muted)}
 
 /* table of contents */
-.toc{position:sticky;top:90px;align-self:start;max-height:calc(100vh - 110px);display:flex;flex-direction:column;padding:20px 12px 12px;border-radius:var(--r-lg)}
+.side{position:sticky;top:94px;align-self:start;max-height:calc(100vh - 150px);display:flex;flex-direction:column;gap:14px;min-width:0}
+.toc{flex:1;min-height:0;display:flex;flex-direction:column;padding:20px 12px 12px;border-radius:var(--r-lg)}
 .toc h2{margin:0 10px;font-size:17px;font-weight:800}
 .toc .seen{margin:2px 10px 10px;font-size:12.5px;color:var(--muted)}
 .toc .seen-bar{height:5px;margin:0 10px 12px;border-radius:5px;background:var(--ux-surface-3);overflow:hidden}
@@ -292,9 +298,16 @@ textarea.inp{min-height:110px;resize:vertical;line-height:1.6}
 /* ───────── responsive ───────── */
 @media (max-width:1024px){
   .layout{grid-template-columns:1fr}
+  .side{display:contents}
+  .pager{position:fixed;z-index:34;left:16px;right:16px;bottom:12px;padding:8px;border-radius:22px;background:rgba(248,251,255,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow-sm)}
+  .layout{padding-bottom:100px}
+  body.present .side{display:contents}
+  body.present .pager{grid-template-columns:1fr 2fr;top:auto;transform:none;right:16px;width:auto}
+  body.present .pager .next,body.present .pager .prev{height:52px;font-size:16px}
+  body.present .layout{grid-template-columns:1fr}
   .toc{position:fixed;z-index:45;top:0;right:0;bottom:0;width:min(330px,86vw);max-height:none;border-radius:var(--r-lg) 0 0 var(--r-lg);transform:translateX(105%);transition:transform .4s var(--ux-ease)}
   .toc.on{transform:none}
-  .toc-fab{display:inline-flex;align-items:center;gap:6px;position:fixed;z-index:35;right:16px;bottom:96px;height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--hairline);background:#fff;box-shadow:var(--shadow-sm);font-weight:750;font-size:14px}
+  .toc-fab{display:inline-flex;align-items:center;gap:6px;position:fixed;z-index:35;right:16px;bottom:92px;height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--hairline);background:#fff;box-shadow:var(--shadow-sm);font-weight:750;font-size:14px}
   .pe{grid-template-columns:1fr}
   .pe-list{max-height:260px}
   .two{grid-template-columns:1fr}
@@ -571,18 +584,20 @@ textarea.inp{min-height:110px;resize:vertical;line-height:1.6}
 <main class="layout">
   <section class="stage" aria-live="polite">
     <article class="slide glass" id="slide"><p class="hint">연수 자료를 불러오고 있어요…</p></article>
-    <div class="pager">
-      <button class="prev" type="button" id="prev">← 이전</button>
-      <button class="next" type="button" id="next">다음 →</button>
-    </div>
     <p class="hint" id="hint"></p>
   </section>
-  <aside class="toc glass" id="toc" aria-label="차례">
-    <h2>📚 차례</h2>
-    <p class="seen" id="seenText"></p>
-    <div class="seen-bar"><i id="seenBar"></i></div>
-    <ol id="tocList"></ol>
-  </aside>
+  <div class="side">
+    <nav class="pager" aria-label="페이지 넘기기">
+      <button class="prev" type="button" id="prev">← 이전</button>
+      <button class="next" type="button" id="next">다음 →</button>
+    </nav>
+    <aside class="toc glass" id="toc" aria-label="차례">
+      <h2>📚 차례</h2>
+      <p class="seen" id="seenText"></p>
+      <div class="seen-bar"><i id="seenBar"></i></div>
+      <ol id="tocList"></ol>
+    </aside>
+  </div>
 </main>
 <button class="toc-fab" type="button" id="tocFab">📚 차례</button>
 <div class="scrim" id="scrim"></div>
