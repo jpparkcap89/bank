@@ -229,6 +229,16 @@ textarea.inp{min-height:110px;resize:vertical;line-height:1.6}
 .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
 .wall .card{padding:14px 16px;font-size:15px;line-height:1.6;animation:pageIn .4s var(--ux-ease) both}
 .wall .card small{display:block;margin-top:6px;font-size:12.5px;color:var(--muted)}
+.rule-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:6px}
+.rule{position:relative;padding:18px 18px 16px 64px}
+.rule:nth-child(-n+3){background:#fff;border-color:rgba(59,99,246,.22);box-shadow:var(--shadow-sm)}
+.rule-ic{position:absolute;left:16px;top:16px;width:36px;height:36px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:var(--ux-accent-soft)}
+.rule-n{position:absolute;right:14px;top:12px;font-size:12px;font-weight:800;color:var(--ux-ink-3)}
+.rule b{display:block;font-size:16.5px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.rule p{margin:0;font-size:14.5px;line-height:1.65;color:var(--muted)}
+body.present .rule b{font-size:19px}
+body.present .rule p{font-size:16px}
+@media (max-width:760px){.rule-cards{grid-template-columns:1fr}}
 .slide.type-divider{display:grid;place-items:center;text-align:center;background:radial-gradient(70% 60% at 50% 30%,rgba(59,99,246,.08),transparent 70%),var(--panel)}
 .divider{max-width:760px;margin:0 auto}
 .dv-emoji{margin:22px 0 6px;font-size:clamp(64px,8vw,96px);line-height:1;animation:float 6s ease-in-out infinite}
@@ -303,6 +313,7 @@ body.present .dv-sub{font-size:22px}
 
 /* print */
 #print{display:none}
+@page{size:A4 portrait;margin:16mm}
 @media print{
   body{background:#fff}
   body>*:not(#print){display:none!important}
@@ -1049,7 +1060,7 @@ function renderNav() {
   });
 }
 
-var TAGS = { prompt: '복사', question: '쓰기', reflection: '쓰기', timer: '⏱', quiz: '퀴즈', flow: '체험', upload: '올리기' };
+var TAGS = { cards: '정리', prompt: '복사', question: '쓰기', reflection: '쓰기', timer: '⏱', quiz: '퀴즈', flow: '체험', upload: '올리기' };
 function renderToc() {
   var ol = $('#tocList'), last = null; ol.innerHTML = '';
   S.pages.forEach(function (p, i) {
@@ -1258,6 +1269,17 @@ var RENDER = {
       loadWall();
       var iv = setInterval(loadWall, 20000); S.cleanups.push(function () { clearInterval(iv); });
     }
+  },
+  cards: function (p, el) {
+    header(p, el);
+    var g = h('div', 'rule-cards');
+    pipes(p.body).forEach(function (r, i) {
+      var c = h('div', 'card rule');
+      c.innerHTML = '<span class="rule-n">' + (i + 1) + '</span><span class="rule-ic" aria-hidden="true">' + esc(r[0]) + '</span><b>' + esc(r[1] || '') + '</b><p>' + esc(r[2] || '') + '</p>';
+      g.appendChild(c);
+    });
+    el.appendChild(g);
+    if (p.prompt) { el.appendChild(h('h3', 'prompt-h', '📋 생성형 AI에게 점검 부탁하기 <small>만든 코드를 붙여 넣으면 위험한 부분을 함께 찾아 줘요. 최종 판단은 선생님이 해요.</small>')); el.appendChild(lxCopy(p.prompt)); }
   },
   divider: function (p, el) {
     // 중간 표지: 몇 번째 장인지, 이 장에서 볼 페이지 목록까지 자동으로 보여 줍니다
@@ -1583,7 +1605,8 @@ var TYPES = [
   ['flow', '주문 흐름 체험', '한 줄에 한 단계: 이모지 | 제목 | 설명 | 짧은 동작 | 역할\n역할: 프론트엔드 / 백엔드 / 데이터베이스'],
   ['quiz', '맞히기 퀴즈', '한 줄에 한 문제: 문제 | 정답\n정답: 프론트엔드 / 백엔드 / 데이터베이스'],
   ['trio', '세 가지 카드', '한 줄에 한 카드(3줄): 이모지 | 큰 글자 | 질문 | 예시'],
-  ['divider', '중간 표지', '본문 한 줄: 이모지 | 한 줄 소개 | 시간 (예: 🚀 | 웹 앱을 만들어요 | 15:40 · 40분)\n제목은 큰 글씨로 보이고, 같은 구분의 페이지 목록과 PART 번호는 자동으로 붙어요.'],
+  ['cards', '카드 목록', '한 줄에 카드 하나: 이모지 | 제목 | 설명\n앞의 세 장은 강조돼요. 프롬프트 칸에 쓰면 아래에 복사 상자로 보여요.'],
+  ['divider', '중간 표지','본문 한 줄: 이모지 | 한 줄 소개 | 시간 (예: 🚀 | 웹 앱을 만들어요 | 15:40 · 40분)\n제목은 큰 글씨로 보이고, 같은 구분의 페이지 목록과 PART 번호는 자동으로 붙어요.'],
   ['upload', '앱 올리기','본문은 안내 문구. 받기와 모아 보기는 ‘앱 설정’에서 켜고 꺼요. 파일은 appFolderId 드라이브 폴더에 저장돼요.']
 ];
 function typeName(t) { var x = TYPES.filter(function (y) { return y[0] === t; })[0]; return x ? x[1] : t; }
@@ -1697,21 +1720,139 @@ function adminReflections(box) {
   var w = h('div', 'rwrap'); w.appendChild(t); box.appendChild(w);
 }
 
-/* PDF: 서버에서 구글 문서 → PDF로 만들어 내려받고, 드라이브에도 한 부 남깁니다. 미리 보기에서는 인쇄로 대신합니다. */
+/* ════════════════ PDF (A4 세로 · Pretendard) ════════════════
+ * 화면과 같은 Pretendard 글꼴 파일을 PDF에 넣어 브라우저에서 바로 만듭니다(pdfmake).
+ * 글자는 이미지가 아니라 글자로 들어가 복사·검색이 됩니다. 만든 PDF는 드라이브에도 한 부 남깁니다.
+ * 글꼴이나 라이브러리를 못 불러오면 인쇄 창(A4 세로)으로 대신합니다. */
+var PDF_LIB = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js';
+var PDF_FONT = 'https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/public/static/alternative/';
+/*PDF-BUILDER-START*/
+function buildPdfDoc(kind, data, s, nowText) {
+  var C = { ink: '#24324a', muted: '#667085', light: '#98a2b3', primary: '#3b63f6', line: '#e4e9f5', soft: '#f4f7ff', head: '#eef3ff', mint: '#2b9a7f' };
+  // Pretendard에 없는 그림 문자(이모지)는 빼서 빈 네모가 나오지 않게 합니다
+  var clean = function (t) { return String(t == null ? '' : t).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, '').trim(); };
+  var label = kind === 'reflections' ? '성찰' : kind === 'all' ? '질문 · 성찰 · 선생님 앱' : '질문';
+  var meta = [s.dateText, s.place, s.instructor].filter(Boolean).map(clean).join('  ·  ');
+  var content = [
+    { text: clean(s.badge || '연수 기록'), color: C.primary, bold: true, fontSize: 9.5, margin: [0, 0, 0, 4] },
+    { text: clean(s.siteTitle), fontSize: 22, bold: true, color: C.ink, margin: [0, 0, 0, 6] },
+    { text: label + ' 모음', fontSize: 12, color: C.primary, bold: true },
+    { text: meta, fontSize: 9.5, color: C.muted, margin: [0, 4, 0, 0] },
+    { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 499, y2: 0, lineWidth: 1.2, lineColor: C.primary }], margin: [0, 12, 0, 6] }
+  ];
+  var h1 = function (t, brk) { return { text: t, style: 'h1', pageBreak: brk ? 'before' : undefined }; };
+  var empty = function (t) { return { text: t, color: C.light, margin: [0, 2, 0, 10] }; };
+  var tableLayout = {
+    hLineWidth: function (i, n) { return i === 0 || i === n.table.body.length ? 0 : 0.6; },
+    vLineWidth: function () { return 0; },
+    hLineColor: function () { return C.line; },
+    fillColor: function (i) { return i === 0 ? C.head : (i % 2 === 0 ? '#fafbff' : null); },
+    paddingTop: function () { return 6; }, paddingBottom: function () { return 6; },
+    paddingLeft: function () { return 6; }, paddingRight: function () { return 6; }
+  };
+  var th = function (t) { return { text: t, bold: true, color: C.primary, fontSize: 9 }; };
+  var sections = 0;
+
+  if (kind !== 'reflections') {
+    var qs = data.questions || [];
+    content.push(h1('연수 전 질문  ' + qs.length + '개', false)); sections++;
+    if (!qs.length) content.push(empty('아직 질문이 없어요.'));
+    else content.push({
+      table: { headerRows: 1, dontBreakRows: true, widths: [20, 60, '*', 76],
+        body: [[th('#'), th('이름'), th('질문'), th('제출 시각')]].concat(qs.map(function (q, i) {
+          return [{ text: String(i + 1), color: C.light }, clean(q['이름']), clean(q['질문']), { text: clean(q['제출시각']), color: C.muted, fontSize: 8.5, noWrap: true }];
+        })) },
+      layout: tableLayout, margin: [0, 0, 0, 8]
+    });
+  }
+  if (kind !== 'questions') {
+    var rs = data.reflections || [];
+    content.push(h1('연수 성찰  ' + rs.length + '명', sections > 0)); sections++;
+    var rated = rs.filter(function (r) { return Number(r['만족도']) > 0; });
+    if (rated.length) {
+      var avg = (rated.reduce(function (a, r) { return a + Number(r['만족도']); }, 0) / rated.length).toFixed(1);
+      content.push({ table: { widths: ['*'], body: [[{ text: [{ text: '평균 만족도  ', color: C.muted }, { text: avg, bold: true, fontSize: 16, color: C.primary }, { text: ' / 5   (' + rated.length + '명 응답)', color: C.muted }], margin: [10, 6, 10, 6] }]] },
+        layout: { hLineWidth: function () { return 0; }, vLineWidth: function () { return 0; }, fillColor: function () { return C.soft; } }, margin: [0, 0, 0, 10] });
+    }
+    if (!rs.length) content.push(empty('아직 성찰이 없어요.'));
+    rs.forEach(function (r, i) {
+      var n = Number(r['만족도']) || 0, rows = [];
+      rows.push({ columns: [{ text: (i + 1) + '. ' + clean(r['이름']), bold: true, fontSize: 11 }, { text: (n ? '만족도 ' + n + ' / 5   ·   ' : '') + clean(r['제출시각']), alignment: 'right', color: C.muted, fontSize: 8.5, margin: [0, 2, 0, 0] }], margin: [0, 0, 0, 4] });
+      [['오늘 배운 점', r['오늘 배운 점']], ['만들고 싶은 앱', r['만들고 싶은 앱']], ['하고 싶은 말', r['하고 싶은 말']]].forEach(function (p) {
+        if (!clean(p[1])) return;
+        rows.push({ columns: [{ width: 72, text: p[0], color: C.primary, bold: true, fontSize: 9 }, { width: '*', text: clean(p[1]) }], columnGap: 6, margin: [0, 2, 0, 2] });
+      });
+      content.push({ unbreakable: true, table: { widths: ['*'], body: [[{ stack: rows, margin: [10, 8, 10, 8] }]] },
+        layout: { hLineWidth: function () { return 0.8; }, vLineWidth: function () { return 0.8; }, hLineColor: function () { return C.line; }, vLineColor: function () { return C.line; } }, margin: [0, 0, 0, 8] });
+    });
+  }
+  if (kind === 'all') {
+    var as = data.apps || [];
+    content.push(h1('선생님 앱  ' + as.length + '개', sections > 0));
+    if (!as.length) content.push(empty('아직 올라온 앱이 없어요.'));
+    else content.push({
+      table: { headerRows: 1, dontBreakRows: true, widths: [20, 54, 90, '*', 76],
+        body: [[th('#'), th('이름'), th('앱'), th('소개 · 주소'), th('제출 시각')]].concat(as.map(function (a, i) {
+          var links = [];
+          if (a['앱 주소']) links.push({ text: '앱 열기', link: a['앱 주소'], color: C.primary, decoration: 'underline' });
+          if (a['파일 주소']) { if (links.length) links.push({ text: '  ·  ' }); links.push({ text: '파일: ' + clean(a['파일 이름']), link: a['파일 주소'], color: C.primary, decoration: 'underline' }); }
+          return [{ text: String(i + 1), color: C.light }, clean(a['이름']), { text: clean(a['앱 이름']), bold: true },
+            { stack: [clean(a['설명']) || ' ', links.length ? { text: links, fontSize: 8.5, margin: [0, 3, 0, 0] } : ''] }, { text: clean(a['제출시각']), color: C.muted, fontSize: 8.5, noWrap: true }];
+        })) },
+      layout: tableLayout
+    });
+  }
+  return {
+    pageSize: 'A4', pageOrientation: 'portrait', pageMargins: [48, 52, 48, 56],
+    info: { title: clean(s.siteTitle) + ' - ' + label, author: clean(s.instructor) },
+    defaultStyle: { font: 'Pretendard', fontSize: 10, lineHeight: 1.35, color: C.ink },
+    styles: { h1: { fontSize: 14, bold: true, color: C.ink, margin: [0, 14, 0, 8] } },
+    footer: function (cur, total) {
+      return { columns: [{ width: '*', text: clean(s.siteTitle) + '  ·  ' + label + '  ·  출력 ' + nowText, color: C.light, fontSize: 8 }, { width: 50, text: cur + ' / ' + total, alignment: 'right', color: C.light, fontSize: 8 }], margin: [48, 18, 48, 0] };
+    },
+    content: content
+  };
+}
+/*PDF-BUILDER-END*/
+var pdfReady = null;
+function loadPdfLib() {
+  if (pdfReady) return pdfReady;
+  pdfReady = new Promise(function (resolve, reject) {
+    if (window.pdfMake) return resolve();
+    var sc = document.createElement('script'); sc.src = PDF_LIB; sc.onload = resolve; sc.onerror = function () { pdfReady = null; reject(new Error('PDF 도구를 불러오지 못했어요')); };
+    document.head.appendChild(sc);
+  }).then(function () {
+    window.pdfMake.fonts = { Pretendard: { normal: PDF_FONT + 'Pretendard-Regular.ttf', bold: PDF_FONT + 'Pretendard-Bold.ttf', italics: PDF_FONT + 'Pretendard-Regular.ttf', bolditalics: PDF_FONT + 'Pretendard-Bold.ttf' } };
+  });
+  return pdfReady;
+}
 function exportPdf(kind) {
-  var w = Toast.wait('PDF를 만드는 중…', '구글 문서로 정리한 뒤 PDF로 바꾸고 있어요');
-  api('adminExportPdf', S.token, kind).then(function (r) {
-    var bin = atob(r.base64), bytes = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    var url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
-    var a = document.createElement('a'); a.href = url; a.download = r.fileName; document.body.appendChild(a); a.click(); a.remove();
+  var w = Toast.wait('PDF를 만드는 중…', 'A4 세로 · Pretendard 글꼴을 넣고 있어요');
+  var d = new Date(), p2 = function (n) { return ('0' + n).slice(-2); };
+  var stamp = d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) + '_' + p2(d.getHours()) + p2(d.getMinutes());
+  var nowText = d.getFullYear() + '.' + p2(d.getMonth() + 1) + '.' + p2(d.getDate()) + ' ' + p2(d.getHours()) + ':' + p2(d.getMinutes());
+  var label = kind === 'reflections' ? '성찰' : kind === 'all' ? '질문과 성찰' : '질문';
+  var fileName = (S.settings.siteTitle || '연수').replace(/[\\/:*?"<>|,]/g, '').trim() + '_' + label + '_' + stamp + '.pdf';
+  var data;
+  api('adminGetData', S.token).then(function (x) { S.admin = x; data = x; return loadPdfLib(); }).then(function () {
+    var pdf = window.pdfMake.createPdf(buildPdfDoc(kind, data, S.settings, nowText));
+    return new Promise(function (resolve) { pdf.getBlob(function (blob) { resolve({ pdf: pdf, blob: blob }); }); });
+  }).then(function (r) {
+    var url = URL.createObjectURL(r.blob);
+    var a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); a.remove();
     var slot = $('.pdf-slot');
-    if (slot) slot.innerHTML = '<p class="card" style="margin:0 0 12px">✅ <b>' + esc(r.fileName) + '</b> — 내려받기가 시작되지 않으면 <a href="' + url + '" download="' + esc(r.fileName) + '">여기를 눌러 내려받기</a>' + (r.driveUrl ? ' · <a href="' + esc(r.driveUrl) + '" target="_blank" rel="noopener">드라이브에서 열기</a>' : '') + '</p>';
-    w.done('ok', 'PDF를 만들었어요', r.fileName);
+    if (slot) slot.innerHTML = '<p class="card" style="margin:0 0 12px">✅ <b>' + esc(fileName) + '</b> (A4 세로) — 내려받기가 시작되지 않으면 <a href="' + url + '" download="' + esc(fileName) + '">여기를 눌러 내려받기</a> <span class="drive-link"></span></p>';
+    w.done('ok', 'PDF를 만들었어요', fileName);
+    // 드라이브에도 한 부 남기기 (실패해도 내려받기는 이미 끝났어요)
+    r.pdf.getBase64(function (b64) {
+      api('adminSavePdf', S.token, fileName, b64).then(function (res) {
+        var dl = $('.pdf-slot .drive-link'); if (dl && res.driveUrl) dl.innerHTML = '· <a href="' + esc(res.driveUrl) + '" target="_blank" rel="noopener">드라이브에서 열기</a>';
+      }).catch(function () { /* 사본 저장은 건너뛰어요 */ });
+    });
   }).catch(function (x) {
     var m = errMsg(x);
     if (/로그인이 필요/.test(m)) { w.close(); return authFail(x); }
-    w.done('err', 'PDF를 바로 만들지 못했어요', '인쇄 창에서 ‘PDF로 저장’을 골라 주세요');
+    w.done('err', 'PDF를 바로 만들지 못했어요', '인쇄 창에서 ‘PDF로 저장’을 골라 주세요 (A4 세로)');
     printResp(kind);
   });
 }
