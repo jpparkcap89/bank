@@ -70,8 +70,8 @@ a{color:var(--primary)}
 .fs-btn{border-color:var(--hairline);color:var(--ink)}
 /* 전체 화면(발표) 모드: 차례를 숨기고 글자를 키웁니다 */
 body.present .toc,body.present .toc-fab,body.present .hint,body.present .blob,body.present .edit-slide{display:none!important}
-body.present .layout{grid-template-columns:minmax(0,1fr) 150px;max-width:1640px;padding-top:16px}
-body.present .side{top:50%;transform:translateY(-50%);position:fixed;right:max(24px,calc((100vw - 1640px) / 2 + 24px));width:150px;max-height:none}
+body.present .layout{grid-template-columns:minmax(0,1fr) 150px;padding-top:16px}
+body.present .side{top:50%;transform:translateY(-50%);position:fixed;right:calc(7.5% + 24px);width:150px;max-height:none}
 body.present .pager{grid-template-columns:1fr;gap:12px}
 body.present .pager .next{height:150px;font-size:19px}
 body.present .pager .prev{height:72px}
@@ -84,7 +84,7 @@ body.present .fs-btn{background:#24324a;color:#fff;border-color:#24324a}
 .progress i{display:block;height:100%;width:0;background:var(--grad);border-radius:0 4px 4px 0;transition:width .5s var(--ux-ease)}
 
 /* ───────── layout ───────── */
-.layout{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;max-width:1260px;margin:0 auto;padding:22px 24px 40px}
+.layout{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;width:85%;margin:0 auto;padding:22px 24px 40px}
 .glass{background:var(--panel);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--panel-line);border-radius:var(--r-xl);box-shadow:var(--shadow)}
 .stage{min-width:0;display:flex;flex-direction:column;gap:14px}
 .slide{position:relative;min-height:calc(100vh - 230px);padding:44px 48px;animation:pageIn .5s var(--ux-ease)}
@@ -229,6 +229,14 @@ textarea.inp{min-height:110px;resize:vertical;line-height:1.6}
 .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
 .wall .card{padding:14px 16px;font-size:15px;line-height:1.6;animation:pageIn .4s var(--ux-ease) both}
 .wall .card small{display:block;margin-top:6px;font-size:12.5px;color:var(--muted)}
+.drop{position:relative;display:flex;align-items:center;justify-content:center;min-height:84px;padding:14px;border-radius:15px;border:2px dashed rgba(59,99,246,.3);background:var(--ux-surface-2);text-align:center;font-size:14.5px;font-weight:650;color:var(--primary);cursor:pointer;transition:.2s}
+.drop:hover,.drop:focus-within{border-color:var(--primary);background:#fff}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.gallery .app-card b{display:block;font-size:16.5px}
+.gallery .app-card p{margin:4px 0 0;color:var(--muted);font-size:14.5px}
+.app-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.app-links .btn{display:inline-flex;align-items:center;text-decoration:none}
+.dummy{margin-top:16px}
 .notice{padding:16px 18px;border-radius:var(--r-md);background:rgba(255,207,112,.25);border:1px solid rgba(245,158,11,.25);font-weight:650}
 .thanks{text-align:center;padding:30px 10px}
 .thanks .e{font-size:56px}
@@ -297,7 +305,7 @@ textarea.inp{min-height:110px;resize:vertical;line-height:1.6}
 
 /* ───────── responsive ───────── */
 @media (max-width:1024px){
-  .layout{grid-template-columns:1fr}
+  .layout{grid-template-columns:1fr;width:100%}
   .side{display:contents}
   .pager{position:fixed;z-index:34;left:16px;right:16px;bottom:12px;padding:8px;border-radius:22px;background:rgba(248,251,255,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow-sm)}
   .layout{padding-bottom:100px}
@@ -485,38 +493,33 @@ textarea.inp{min-height:110px;resize:vertical;line-height:1.6}
 .u070-live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 
-<!-- Lucian UX/UI Prompt #256 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#256 -->
+<!-- Lucian UX/UI Prompt #080 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#080 -->
 <style>
-.u256{position:fixed;inset:0;z-index:100;color:#f8fbff}
-.u256-hf{position:absolute;left:0;right:0;height:50.5%;background:#24324a;transition:transform .9s cubic-bezier(.76,0,.24,1)}
-.u256-hf.u256-a{top:0}
-.u256-hf.u256-b{bottom:0}
-.u256.is-open{pointer-events:none}
-.u256.is-open .u256-a{transform:translateY(-101%)}
-.u256.is-open .u256-b{transform:translateY(101%)}
-/* 물결이 차오르는 판 (#256의 갈라지는 막은 그대로, 숫자 대신 물결) */
-.u256-wv{position:absolute;inset:0;overflow:hidden}
-.u256-water{position:absolute;left:0;right:0;bottom:0;height:calc(var(--lv,0) * 1%);background:linear-gradient(180deg,#38bdf8 0%,#3b63f6 70%,#2f4fd0 100%);transition:height .6s cubic-bezier(.2,.8,.2,1)}
-.u256-water svg{position:absolute;left:0;bottom:calc(100% - 1px);width:200%;height:26px;animation:u256-wave 3.2s linear infinite}
-.u256-water svg.u256-w2{height:34px;opacity:.45;animation-duration:5.5s;animation-direction:reverse}
-.u256-water svg path{fill:#38bdf8}
-.u256-water::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.18) 0 6px,transparent 7px),radial-gradient(circle at 70% 60%,rgba(255,255,255,.14) 0 4px,transparent 5px),radial-gradient(circle at 45% 80%,rgba(255,255,255,.12) 0 5px,transparent 6px);background-size:160px 160px;animation:u256-bub 6s linear infinite}
-@keyframes u256-wave{to{transform:translateX(-50%)}}
-@keyframes u256-bub{to{background-position:0 -160px}}
-.u256-ct{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:2;text-align:center;transition:opacity .3s;text-shadow:0 2px 18px rgba(20,30,60,.35)}
-.u256.is-open .u256-ct,.u256.is-open .u256-bn,.u256.is-open .u256-wv{opacity:0;transition:opacity .35s}
-.u256-ct b{display:block;font-size:clamp(22px,3.4vw,34px);font-weight:850;letter-spacing:-.03em}
-.u256-ct small{display:block;margin-top:6px;font-size:14px;font-weight:650;color:#c9d3ea}
-.u256-bn{position:absolute;z-index:2;left:clamp(20px,5vw,56px);top:clamp(20px,5vh,44px);font-size:15px;font-weight:850;letter-spacing:-.02em;transition:opacity .3s}
-.u256-bn span{display:block;margin-top:2px;font-size:12.5px;font-weight:650;color:#a9b4cc}
-/* 관리자 화면 안에서 쓰는 작은 판 */
-.u256.u256-inl{position:relative;inset:auto;z-index:auto;height:230px;border-radius:var(--r-lg);overflow:hidden;color:var(--ink);background:rgba(255,255,255,.78);border:1px solid var(--hairline)}
-.u256-inl .u256-hf{display:none}
-.u256-inl .u256-ct{text-shadow:none}
-.u256-inl .u256-ct small{color:var(--muted)}
-.u256-inl .u256-water{background:linear-gradient(180deg,rgba(56,189,248,.55),rgba(59,99,246,.45))}
-.u256-inl .u256-water svg path{fill:rgba(56,189,248,.55)}
-@media (prefers-reduced-motion: reduce){.u256-hf{transition:none}.u256-water svg,.u256-water::after{animation:none}}
+.u080-veil{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:16px;background:rgba(248,251,255,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:opacity .45s var(--ux-ease)}
+.u080-veil.out{opacity:0;pointer-events:none}
+.u080{position:relative;width:340px;max-width:100%;height:330px;display:flex;flex-direction:column;align-items:center;padding:26px 24px 22px;border-radius:30px;background:radial-gradient(80% 60% at 50% 35%,color-mix(in srgb,var(--ux-accent) 14%,transparent),transparent 70%),var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u080.u080-inl{margin:40px auto}
+.u080-sys{position:relative;width:230px;height:200px;flex:none}
+.u080-o{position:absolute;left:50%;top:50%;width:var(--d);height:var(--d);margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);transform:rotate(var(--t)) scaleY(.38);transition:transform .7s var(--ux-ease),opacity .5s}
+.u080-o::before{content:"";position:absolute;inset:0;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--ux-ink) 14%,transparent)}
+.u080-p{position:absolute;left:0;top:0;width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c);transition:opacity .4s}
+.u080.is-done .u080-p{opacity:0}
+.u080-core{position:absolute;z-index:1;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#fff,#9fb4ff 40%,#3b63f6);box-shadow:0 0 30px color-mix(in srgb,var(--ux-accent) 60%,transparent);animation:u080-breath 2.2s ease-in-out infinite;display:grid;place-items:center;transition:background .5s,width .6s var(--ux-spring),height .6s var(--ux-spring),margin .6s var(--ux-spring)}
+@keyframes u080-breath{50%{transform:scale(1.08);box-shadow:0 0 44px color-mix(in srgb,var(--ux-accent) 70%,transparent)}}
+.u080-core svg{width:34px;height:34px;fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.u080-core path{stroke-dasharray:30;stroke-dashoffset:30;transition:stroke-dashoffset .5s var(--ux-ease) .35s}
+.u080-wave{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;border:2px solid var(--ux-mint);opacity:0}
+.u080.is-done .u080-o{transform:rotate(var(--t)) scaleY(.38) scale(0);opacity:0}
+.u080.is-done .u080-core{width:84px;height:84px;margin:-42px 0 0 -42px;background:var(--ux-mint);box-shadow:0 0 0 0 transparent;animation:none}
+.u080.is-done .u080-core path{stroke-dashoffset:0}
+.u080.is-done .u080-wave{animation:u080-wave 1.1s var(--ux-ease) .3s 2}
+@keyframes u080-wave{from{transform:scale(1);opacity:.7}to{transform:scale(2.4);opacity:0}}
+.u080-msg{width:100%;text-align:center}
+.u080-t{position:relative;height:26px;width:100%;margin-top:14px;text-align:center}
+.u080-t b{position:absolute;left:0;right:0;font-size:18px;font-weight:850;letter-spacing:-.04em;transition:opacity .3s,transform .45s var(--ux-spring)}
+.u080-t b.out{opacity:0;transform:translateY(-10px)}
+.u080-t b.in{opacity:0;transform:translateY(10px)}
+.u080-sub{margin:4px 0 0;font-size:13px;font-weight:650;color:var(--ux-ink-3);font-variant-numeric:tabular-nums}
 </style>
 
 <!-- Lucian UX/UI Prompt #100 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#100 -->
@@ -914,33 +917,60 @@ function lxTimer(minutes, cleanups) {
   return root;
 }
 
-/* ════════════════ Lucian #256 차오르는 로딩 ════════════════
- * 기다리는 동안 물결이 고르지 않게 90%까지 차오르고, 데이터가 오면 끝까지 채운 뒤
- * 위아래 두 장으로 갈라져 걷힙니다. inline이면 관리자 화면 안의 작은 판으로 보여 줍니다. */
-function lxFill(label, parent) {
-  var root = h('div', 'ux u256' + (parent ? ' u256-inl' : ''));
-  root.setAttribute('role', 'progressbar'); root.setAttribute('aria-label', label); root.setAttribute('aria-valuemin', '0'); root.setAttribute('aria-valuemax', '100');
-  root.innerHTML = '<div class="u256-hf u256-a"></div><div class="u256-hf u256-b"></div>' +
-    (parent ? '' : '<div class="u256-bn">' + esc(document.title || '연수') + '<span>온라인 교원 연수</span></div>') +
-    '<div class="u256-wv" aria-hidden="true"><div class="u256-water"><svg class="u256-w2" viewBox="0 0 1200 26" preserveAspectRatio="none"><path d="M0 13 Q 75 0 150 13 T 300 13 T 450 13 T 600 13 T 750 13 T 900 13 T 1050 13 T 1200 13 V26 H0 Z"/></svg><svg viewBox="0 0 1200 26" preserveAspectRatio="none"><path d="M0 13 Q 75 0 150 13 T 300 13 T 450 13 T 600 13 T 750 13 T 900 13 T 1050 13 T 1200 13 V26 H0 Z"/></svg></div></div>' +
-    '<div class="u256-ct"><b></b><small>잠시만 기다려 주세요</small></div>';
-  root.querySelector('.u256-ct b').textContent = label;
-  (parent || document.body).appendChild(root);
-  var water = root.querySelector('.u256-water'), v = 0, cap = 90, t = 0, cb = null;
-  function set(x) { water.style.setProperty('--lv', x); root.setAttribute('aria-valuenow', x); }
-  function finish() {
-    if (parent) { setTimeout(function () { if (cb) cb(); }, RM ? 0 : 450); return; }
-    setTimeout(function () { root.classList.add('is-open'); if (cb) cb(); setTimeout(function () { root.remove(); }, 1000); }, RM ? 0 : 650);
+/* ════════════════ Lucian #080 궤도 로딩 ════════════════
+ * 데이터를 불러오는 동안 세 궤도를 행성이 돌고 가운데 핵이 숨 쉬듯 빛납니다.
+ * 다 불러오면 궤도가 핵으로 빨려 들어가 체크로 바뀌고, 화면을 덮던 막이 걷힙니다.
+ * parent를 주면 그 안에 카드만 보여 줍니다(관리자 화면). */
+function lxFill(label, parent, subText) {
+  var root = h('div', 'ux u080' + (parent ? ' u080-inl' : ''));
+  root.innerHTML = '<div class="u080-sys" aria-hidden="true"><div class="u080-o" style="--d:210px;--t:-18deg"></div><div class="u080-o" style="--d:150px;--t:24deg"></div><div class="u080-o" style="--d:100px;--t:-58deg"></div><span class="u080-wave"></span><span class="u080-core"><svg viewBox="0 0 34 34"><path d="M9 17.5l5.5 5.5L25.5 12"/></svg></span></div>' +
+    '<div class="u080-msg" role="status" aria-live="polite"><div class="u080-t"></div><p class="u080-sub"></p></div>';
+  var veil = null;
+  if (parent) parent.appendChild(root);
+  else { veil = h('div', 'u080-veil'); veil.appendChild(root); document.body.appendChild(veil); }
+  var tWrap = root.querySelector('.u080-t'), sub = root.querySelector('.u080-sub'), sys = root.querySelector('.u080-sys'), core = root.querySelector('.u080-core');
+  sub.textContent = subText || (document.title || '') ;
+  function title(txt) {
+    var old = tWrap.querySelector('b:not(.out)'), b = document.createElement('b');
+    b.textContent = txt; b.className = 'in'; tWrap.appendChild(b); void b.offsetWidth; b.className = '';
+    if (old) { old.className = 'out'; setTimeout(function () { old.remove(); }, 450); }
   }
-  // 실제 로딩처럼 고르지 않게: 잠깐 멈추기도 하고 몇 칸씩 뛰기도 합니다
-  (function step() {
-    if (!root.isConnected) return;
-    if (v < cap) { v = Math.min(cap, v + (Math.random() < 0.18 ? 0 : 1 + Math.floor(Math.random() * (v > 70 ? 3 : 8)))); set(v); }
-    t = setTimeout(step, Math.random() < 0.12 ? 260 : 90);
-  })();
-  // 데이터가 오면 바로 끝까지 채우고(높이 전환은 CSS가 맡음) 걷어 냅니다. 탭이 뒤에 있어도 멈추지 않게 타이머 하나로 끝냅니다.
-  var ended = false;
-  return { done: function (after) { if (ended) return; ended = true; cb = after || null; cap = 100; clearTimeout(t); v = 100; set(100); finish(); } };
+  title(label);
+  // 행성은 기울어진 타원 위의 좌표를 직접 계산하고, 뒤쪽 반에 있을 때는 핵 뒤로 숨깁니다
+  var O = [[105, -18, 5.5, '#22C3A6', 12], [75, 24, 3.6, '#FF6B8B', 10], [50, -58, 2.2, '#FFB547', 9]], planets = [];
+  O.forEach(function (o, i) {
+    [0, Math.PI].forEach(function (ph, k) {
+      var p = document.createElement('i'); p.className = 'u080-p';
+      p.style.setProperty('--c', o[3]); p.style.setProperty('--s', (k ? o[4] - 4 : o[4]) + 'px');
+      if (k) p.style.opacity = '.7';
+      sys.insertBefore(p, core); planets.push({ el: p, o: o, ph: ph + i });
+    });
+  });
+  var state = 'run', orbitT = 0, lastF = performance.now();
+  function orbit(now) {
+    if (!root.isConnected || state === 'done') return;
+    if (!RM) orbitT += (now - lastF) / 1000;
+    lastF = now;
+    planets.forEach(function (p) {
+      var o = p.o, a = p.ph + orbitT * Math.PI * 2 / o[2], tl = o[1] * Math.PI / 180;
+      var x = Math.cos(a) * o[0], y = Math.sin(a) * o[0] * 0.38;
+      var rx = x * Math.cos(tl) - y * Math.sin(tl), ry = x * Math.sin(tl) + y * Math.cos(tl);
+      p.el.style.transform = 'translate(' + (115 + rx).toFixed(1) + 'px,' + (100 + ry).toFixed(1) + 'px)';
+      p.el.style.zIndex = Math.sin(a) < 0 ? 0 : 2;
+    });
+    requestAnimationFrame(orbit);
+  }
+  requestAnimationFrame(orbit);
+  return {
+    done: function (after, doneText) {
+      if (state === 'done') return; state = 'done';
+      root.classList.add('is-done'); title(doneText || '다 불러왔어요');
+      setTimeout(function () {
+        if (after) after();
+        if (veil) { veil.classList.add('out'); setTimeout(function () { veil.remove(); }, 500); }
+      }, RM ? 0 : 750);
+    }
+  };
 }
 
 /* ════════════════ Lucian #039 알약 탭 ════════════════ */
@@ -1005,7 +1035,7 @@ function renderNav() {
   });
 }
 
-var TAGS = { prompt: '복사', question: '쓰기', reflection: '쓰기', timer: '⏱', quiz: '퀴즈', flow: '체험' };
+var TAGS = { prompt: '복사', question: '쓰기', reflection: '쓰기', timer: '⏱', quiz: '퀴즈', flow: '체험', upload: '올리기' };
 function renderToc() {
   var ol = $('#tocList'), last = null; ol.innerHTML = '';
   S.pages.forEach(function (p, i) {
@@ -1215,6 +1245,49 @@ var RENDER = {
       var iv = setInterval(loadWall, 20000); S.cleanups.push(function () { clearInterval(iv); });
     }
   },
+  upload: function (p, el) {
+    header(p, el);
+    el.insertAdjacentHTML('beforeend', md(p.body));
+    if (String(S.settings.appUploadOpen).toUpperCase() !== 'TRUE') el.appendChild(h('div', 'notice', '지금은 앱을 받지 않고 있어요.'));
+    else {
+      var f = h('form', 'form-card');
+      f.innerHTML = '<div class="form-row"><label class="field"><span>이름</span><input class="inp" name="name" maxlength="40" placeholder="이름 (비워 두면 익명)"></label>' +
+        '<label class="field"><span>앱 이름 *</span><input class="inp" name="appName" maxlength="80" placeholder="예: 학급 문고 대여장" required></label></div>' +
+        '<label class="field"><span>한 줄 소개</span><input class="inp" name="desc" maxlength="500" placeholder="예: 책을 빌리고 돌려줄 때 버튼 한 번으로 기록돼요"></label>' +
+        '<label class="field"><span>🔗 웹 앱 주소</span><input class="inp" name="url" type="url" placeholder="https://script.google.com/macros/s/…/exec"></label>' +
+        '<div class="field"><span>📎 파일 <small style="color:var(--muted);font-weight:500">(HTML · 코드 · 화면 캡처 · PDF · ZIP 등, 10MB까지)</small></span>' +
+        '<label class="drop"><input type="file" name="file" accept=".html,.htm,.gs,.js,.css,.json,.txt,.md,.zip,.pdf,.png,.jpg,.jpeg,.gif,.webp,.pptx,.docx,.xlsx,.hwp,.hwpx"><span class="drop-t">여기를 눌러 파일을 고르거나 끌어다 놓으세요</span></label></div>' +
+        '<div class="form-foot"><button class="btn" type="submit">앱 올리기 🚀</button></div>';
+      f.name.value = userName();
+      var fileInp = f.querySelector('input[type=file]'), dropT = f.querySelector('.drop-t');
+      fileInp.addEventListener('change', function () { var x = fileInp.files[0]; dropT.textContent = x ? '📄 ' + x.name + ' · ' + (x.size / 1024 / 1024).toFixed(2) + 'MB' : '여기를 눌러 파일을 고르거나 끌어다 놓으세요'; });
+      f.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var file = fileInp.files[0], url = f.url.value.trim();
+        if (!f.appName.value.trim()) { f.appName.focus(); return Toast.err('앱 이름을 적어 주세요'); }
+        if (!file && !url) return Toast.err('웹 앱 주소나 파일 가운데 하나는 올려 주세요');
+        if (url && !/^https:\/\//i.test(url)) return Toast.err('앱 주소는 https:// 로 시작해야 해요');
+        if (file && file.size > 10 * 1024 * 1024) return Toast.err('파일은 10MB까지 올릴 수 있어요');
+        var btn = f.querySelector('button[type=submit]'); btn.disabled = true;
+        if (f.name.value.trim()) store('gt_name', f.name.value.trim());
+        var w = Toast.wait('앱을 올리는 중…', file ? '구글 드라이브에 파일을 저장하고 있어요' : '');
+        readFile(file).then(function (b64) {
+          return api('submitApp', { name: f.name.value, appName: f.appName.value, desc: f.desc.value, url: url, fileName: file ? file.name : '', mimeType: file ? file.type : '', base64: b64 });
+        }).then(function () {
+          w.done('ok', '앱을 올렸어요 🎉', '아래 모음판에서 확인해 보세요'); f.reset(); f.name.value = userName(); dropT.textContent = '여기를 눌러 파일을 고르거나 끌어다 놓으세요'; loadGallery();
+        }).catch(function (x) { w.done('err', '올리지 못했어요', errMsg(x)); }).then(function () { btn.disabled = false; });
+      });
+      el.appendChild(f);
+    }
+    if (String(S.settings.showAppGallery).toUpperCase() === 'TRUE') {
+      var gh = h('div', 'wall-h', '<h3>🧩 선생님들이 만든 앱</h3><span class="hint" id="galCount"></span>');
+      var rb = h('button', 'btn ghost sm', '새로고침'); rb.type = 'button'; rb.addEventListener('click', loadGallery); gh.appendChild(rb);
+      el.appendChild(gh);
+      var gal = h('div', 'wall gallery'); gal.id = 'gallery'; el.appendChild(gal);
+      loadGallery();
+      var iv = setInterval(loadGallery, 30000); S.cleanups.push(function () { clearInterval(iv); });
+    }
+  },
   reflection: function (p, el) {
     header(p, el);
     el.insertAdjacentHTML('beforeend', md(p.body));
@@ -1246,6 +1319,29 @@ var RENDER = {
     el.appendChild(f);
   }
 };
+
+function readFile(file) {
+  if (!file) return Promise.resolve('');
+  return new Promise(function (resolve, reject) {
+    var r = new FileReader();
+    r.onload = function () { resolve(String(r.result).split(',')[1] || ''); };
+    r.onerror = function () { reject(new Error('파일을 읽지 못했어요')); };
+    r.readAsDataURL(file);
+  });
+}
+function safeUrl(u) { return /^https:\/\//i.test(String(u || '')) ? esc(u) : ''; }
+function loadGallery() {
+  var gal = $('#gallery'); if (!gal) return;
+  api('getAppGallery').then(function (list) {
+    if (!$('#gallery')) return;
+    $('#galCount').textContent = list.length + '개';
+    gal.innerHTML = list.length ? list.map(function (a, i) {
+      var links = (safeUrl(a.url) ? '<a class="btn sm" href="' + safeUrl(a.url) + '" target="_blank" rel="noopener">앱 열기</a>' : '') +
+        (safeUrl(a.fileUrl) ? '<a class="btn ghost sm" href="' + safeUrl(a.fileUrl) + '" target="_blank" rel="noopener">📎 파일</a>' : '');
+      return '<div class="card app-card" style="animation-delay:' + Math.min(i, 10) * 40 + 'ms"><b>' + esc(a.appName) + '</b>' + (a.desc ? '<p>' + esc(a.desc) + '</p>' : '') + '<small>— ' + esc(a.name) + '</small><div class="app-links">' + links + '</div></div>';
+    }).join('') : '<p class="hint">아직 올라온 앱이 없어요. 첫 앱을 올려 주세요!</p>';
+  }).catch(function () { /* 조용히 넘어가요 */ });
+}
 
 function loadWall() {
   var wall = $('#wall'); if (!wall) return;
@@ -1330,7 +1426,7 @@ function updateAdminBtn() { var b = $('#adminBtn'); b.classList.toggle('on', !!S
 $('#adminBtn').addEventListener('click', function () { if (S.token) openAdmin(S.tab); else openLogin(); });
 
 /* ════════════════ 관리자 화면 ════════════════ */
-var adminTabs = lxTabs(['⚙️ 앱 설정', '📄 페이지 수정', '🙋 질문', '🪞 성찰'], function (i) { S.tab = i; renderAdmin(); });
+var adminTabs = lxTabs(['⚙️ 앱 설정', '📄 페이지 수정', '🙋 질문', '🪞 성찰', '🧩 선생님 앱'], function (i) { S.tab = i; renderAdmin(); });
 $('#adminTabs').appendChild(adminTabs);
 
 function openAdmin(tab, editIdx) {
@@ -1358,7 +1454,7 @@ function authFail(e) {
 }
 function loadAdmin() {
   var box = $('#adminInner'); box.innerHTML = '';
-  var fill = lxFill('관리 데이터 불러오는 중', box);
+  var fill = lxFill('관리 데이터를 불러오는 중', box, '설정 · 페이지 · 질문 · 성찰 · 앱');
   api('adminGetData', S.token).then(function (d) {
     fill.done(function () {
       S.admin = d; $('#sheetLink').href = d.sheetUrl || '#';
@@ -1373,7 +1469,7 @@ function renderAdmin() {
   if (!S.admin) { box.innerHTML = '<p class="empty">불러오는 중…</p>'; return; }
   box.innerHTML = '';
   if (S.admin.passwordIsDefault) box.appendChild(h('div', 'warnbar', '⚠️ 관리자 비밀번호가 기본값(admin1234)이에요. ‘앱 설정’에서 꼭 바꿔 주세요.'));
-  [adminSettings, adminPages, adminQuestions, adminReflections][S.tab](box);
+  [adminSettings, adminPages, adminQuestions, adminReflections, adminApps][S.tab](box);
 }
 
 function adminSettings(box) {
@@ -1405,6 +1501,46 @@ function adminSettings(box) {
     }).catch(function (x) { w.close(); authFail(x); });
   });
   box.appendChild(f);
+  box.appendChild(dummyCard());
+}
+
+/* 더미 데이터: 아이디가 dummy- 로 시작하는 질문·성찰·앱을 넣었다가 그것만 지웁니다 */
+function dummyCard() {
+  var d = S.admin, isDummy = function (r) { return String(r.id || '').indexOf('dummy-') === 0; };
+  var n = d.questions.filter(isDummy).length + d.reflections.filter(isDummy).length + (d.apps || []).filter(isDummy).length;
+  var c = h('div', 'pe-form glass dummy');
+  c.innerHTML = '<div class="sec-h"><h3>🧪 더미 데이터</h3><span class="hint">' + (n ? '지금 더미 ' + n + '줄이 들어 있어요' : '지금 더미 데이터가 없어요') + '</span><span class="sp"></span></div>' +
+    '<p class="hint" style="text-align:left;margin:0 0 12px">연수 전에 화면을 점검할 때 써요. 질문 6개, 성찰 4개, 앱 3개를 넣고, 지울 때는 더미로 넣은 것만 지워요. 선생님들이 남긴 진짜 응답은 그대로예요.</p>';
+  var row = h('div', 'tools');
+  var add = h('button', 'btn sm', '더미 데이터 만들기'), del = h('button', 'btn sm danger', '더미 데이터 지우기');
+  add.type = del.type = 'button'; del.disabled = !n;
+  add.addEventListener('click', function () {
+    var w = Toast.wait('더미 데이터를 만드는 중…');
+    api('adminSeedDummy', S.token).then(function (x) { S.admin = x; renderAdmin(); w.done('ok', '더미 데이터를 만들었어요', '질문·성찰·선생님 앱 탭에서 확인해 보세요'); }).catch(function (x) { w.close(); authFail(x); });
+  });
+  del.addEventListener('click', function () {
+    if (!confirm('더미 데이터 ' + n + '줄을 지울까요? 진짜 응답은 지우지 않아요.')) return;
+    var w = Toast.wait('더미 데이터를 지우는 중…');
+    api('adminClearDummy', S.token).then(function (x) { S.admin = x; renderAdmin(); w.done('ok', '더미 데이터를 지웠어요'); }).catch(function (x) { w.close(); authFail(x); });
+  });
+  row.appendChild(add); row.appendChild(del); c.appendChild(row);
+  return c;
+}
+
+function adminApps(box) {
+  var as = S.admin.apps || [];
+  var hd = h('div', 'sec-h', '<h3>🧩 선생님 앱 <small style="color:var(--muted);font-weight:650">' + as.length + '개</small></h3><span class="sp"></span>');
+  var rf = h('button', 'btn ghost sm', '🔄 새로고침'); rf.type = 'button'; rf.addEventListener('click', loadAdmin); hd.appendChild(rf);
+  box.appendChild(hd);
+  if (!as.length) return box.appendChild(h('div', 'empty glass', '아직 올라온 앱이 없어요. 파일은 드라이브의 ‘내게 필요한 앱 연수 - 선생님 앱’ 폴더에 저장돼요.'));
+  var t = h('table', 'rtable'); t.innerHTML = '<thead><tr><th>#</th><th>이름</th><th>앱</th><th>소개</th><th>주소 · 파일</th><th>제출 시각</th><th></th></tr></thead><tbody></tbody>';
+  as.forEach(function (a, i) {
+    var links = (safeUrl(a['앱 주소']) ? '<a href="' + safeUrl(a['앱 주소']) + '" target="_blank" rel="noopener">앱 열기</a>' : '') +
+      (safeUrl(a['파일 주소']) ? (a['앱 주소'] ? ' · ' : '') + '<a href="' + safeUrl(a['파일 주소']) + '" target="_blank" rel="noopener">📎 ' + esc(a['파일 이름']) + '</a>' : '');
+    var tr = h('tr', '', '<td class="n">' + (i + 1) + '</td><td>' + esc(a['이름']) + '</td><td><b>' + esc(a['앱 이름']) + '</b></td><td class="pre">' + esc(a['설명']) + '</td><td>' + (links || '-') + '</td><td class="t">' + esc(a['제출시각']) + '</td><td></td>');
+    tr.lastChild.appendChild(delBtn('apps', a.id)); t.tBodies[0].appendChild(tr);
+  });
+  var w = h('div', 'rwrap'); w.appendChild(t); box.appendChild(w);
 }
 
 var TYPES = [
@@ -1418,7 +1554,8 @@ var TYPES = [
   ['concept', '세 부분 개념(그림)', '한 줄에 하나씩: 이모지 | 이름 | 식당 비유 | 설명 | 도구\n그림은 ‘앱 설정’의 개념 그림 주소(비우면 내장 그림)'],
   ['flow', '주문 흐름 체험', '한 줄에 한 단계: 이모지 | 제목 | 설명 | 짧은 동작 | 역할\n역할: 프론트엔드 / 백엔드 / 데이터베이스'],
   ['quiz', '맞히기 퀴즈', '한 줄에 한 문제: 문제 | 정답\n정답: 프론트엔드 / 백엔드 / 데이터베이스'],
-  ['trio', '세 가지 카드', '한 줄에 한 카드(3줄): 이모지 | 큰 글자 | 질문 | 예시']
+  ['trio', '세 가지 카드', '한 줄에 한 카드(3줄): 이모지 | 큰 글자 | 질문 | 예시'],
+  ['upload', '앱 올리기', '본문은 안내 문구. 받기와 모아 보기는 ‘앱 설정’에서 켜고 꺼요. 파일은 appFolderId 드라이브 폴더에 저장돼요.']
 ];
 function typeName(t) { var x = TYPES.filter(function (y) { return y[0] === t; })[0]; return x ? x[1] : t; }
 
@@ -1566,7 +1703,7 @@ function printResp(kind) {
 
 /* ════════════════ 시작 ════════════════ */
 function start() {
-  var fill = lxFill('연수 자료 불러오는 중');
+  var fill = lxFill('연수 자료를 불러오는 중', null, '페이지 · 설정 · 질문');
   api('getBootstrap').then(function (d) {
     fill.done();
     S.settings = d.settings; S.pages = d.pages;
