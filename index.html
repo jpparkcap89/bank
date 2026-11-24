@@ -229,6 +229,19 @@ textarea.inp{min-height:110px;resize:vertical;line-height:1.6}
 .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
 .wall .card{padding:14px 16px;font-size:15px;line-height:1.6;animation:pageIn .4s var(--ux-ease) both}
 .wall .card small{display:block;margin-top:6px;font-size:12.5px;color:var(--muted)}
+.slide.type-divider{display:grid;place-items:center;text-align:center;background:radial-gradient(70% 60% at 50% 30%,rgba(59,99,246,.08),transparent 70%),var(--panel)}
+.divider{max-width:760px;margin:0 auto}
+.dv-emoji{margin:22px 0 6px;font-size:clamp(64px,8vw,96px);line-height:1;animation:float 6s ease-in-out infinite}
+.dv-h{margin:6px 0 12px;font-size:clamp(34px,5vw,60px);font-weight:850;letter-spacing:-.03em;line-height:1.15}
+.dv-h .g{display:inline-block;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dv-sub{margin:0 auto 26px;max-width:600px;font-size:19px;color:var(--muted)}
+.dv-list{list-style:none;counter-reset:d;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0;padding:0}
+.dv-list li{counter-increment:d}
+.dv-list button{height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--hairline);background:rgba(255,255,255,.85);font-size:14px;font-weight:650;color:var(--ink);transition:.2s}
+.dv-list button::before{content:counter(d);display:inline-grid;place-items:center;width:20px;height:20px;margin-right:7px;border-radius:50%;background:var(--ux-accent-soft);color:var(--primary);font-size:11.5px;font-weight:800}
+.dv-list button:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-2px)}
+body.present .dv-sub{font-size:22px}
+@media (prefers-reduced-motion:reduce){.dv-emoji{animation:none}}
 .drop{position:relative;display:flex;align-items:center;justify-content:center;min-height:84px;padding:14px;border-radius:15px;border:2px dashed rgba(59,99,246,.3);background:var(--ux-surface-2);text-align:center;font-size:14.5px;font-weight:650;color:var(--primary);cursor:pointer;transition:.2s}
 .drop:hover,.drop:focus-within{border-color:var(--primary);background:#fff}
 .drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
@@ -1246,6 +1259,20 @@ var RENDER = {
       var iv = setInterval(loadWall, 20000); S.cleanups.push(function () { clearInterval(iv); });
     }
   },
+  divider: function (p, el) {
+    // 중간 표지: 몇 번째 장인지, 이 장에서 볼 페이지 목록까지 자동으로 보여 줍니다
+    var r = (pipes(p.body)[0] || []), parts = S.pages.filter(function (x) { return x.type === 'divider'; });
+    var no = parts.indexOf(p) + 1, inSec = S.pages.filter(function (x) { return x.section === p.section && x !== p; });
+    var title = esc(p.title || p.section), cut = title.indexOf(' · ');
+    var wrap = h('div', 'divider');
+    wrap.innerHTML = '<span class="eyebrow">PART ' + String(no).padStart(2, '0') + (r[2] ? ' · ' + esc(r[2]) : '') + '</span>' +
+      '<div class="dv-emoji" aria-hidden="true">' + esc(r[0] || '📌') + '</div>' +
+      '<h2 class="dv-h">' + (cut > 0 ? title.slice(0, cut) + '<br><span class="g">' + title.slice(cut + 3) + '</span>' : '<span class="g">' + title + '</span>') + '</h2>' +
+      (r[1] ? '<p class="dv-sub">' + esc(r[1]) + '</p>' : '') +
+      (inSec.length ? '<ol class="dv-list">' + inSec.map(function (x) { return '<li><button type="button" data-i="' + S.pages.indexOf(x) + '">' + esc(x.title) + '</button></li>'; }).join('') + '</ol>' : '');
+    wrap.querySelectorAll('.dv-list button').forEach(function (b) { b.addEventListener('click', function () { go(+b.dataset.i); }); });
+    el.appendChild(wrap);
+  },
   upload: function (p, el) {
     header(p, el);
     el.insertAdjacentHTML('beforeend', md(p.body));
@@ -1556,7 +1583,8 @@ var TYPES = [
   ['flow', '주문 흐름 체험', '한 줄에 한 단계: 이모지 | 제목 | 설명 | 짧은 동작 | 역할\n역할: 프론트엔드 / 백엔드 / 데이터베이스'],
   ['quiz', '맞히기 퀴즈', '한 줄에 한 문제: 문제 | 정답\n정답: 프론트엔드 / 백엔드 / 데이터베이스'],
   ['trio', '세 가지 카드', '한 줄에 한 카드(3줄): 이모지 | 큰 글자 | 질문 | 예시'],
-  ['upload', '앱 올리기', '본문은 안내 문구. 받기와 모아 보기는 ‘앱 설정’에서 켜고 꺼요. 파일은 appFolderId 드라이브 폴더에 저장돼요.']
+  ['divider', '중간 표지', '본문 한 줄: 이모지 | 한 줄 소개 | 시간 (예: 🚀 | 웹 앱을 만들어요 | 15:40 · 40분)\n제목은 큰 글씨로 보이고, 같은 구분의 페이지 목록과 PART 번호는 자동으로 붙어요.'],
+  ['upload', '앱 올리기','본문은 안내 문구. 받기와 모아 보기는 ‘앱 설정’에서 켜고 꺼요. 파일은 appFolderId 드라이브 폴더에 저장돼요.']
 ];
 function typeName(t) { var x = TYPES.filter(function (y) { return y[0] === t; })[0]; return x ? x[1] : t; }
 
